@@ -28,7 +28,6 @@ import {
   coachingPriorities,
   confidenceTone,
   driverRecords,
-  driverStatusCounts,
   fiscalWeeks,
   formatCurrency,
   formatHours,
@@ -63,7 +62,7 @@ function App() {
   const [nphMeasure, setNphMeasure] = useState<NphMeasure>('Stop NPH');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [driverQuery, setDriverQuery] = useState('');
-  const [selectedDriverId, setSelectedDriverId] = useState<string | null>('jordan-lee');
+  const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
 
   const filteredDrivers = useMemo(
     () => driverRecords.filter((driver) => driver.market === market),
@@ -71,7 +70,7 @@ function App() {
   );
 
   const activeDriver = useMemo(
-    () => filteredDrivers.find((driver) => driver.id === selectedDriverId) ?? filteredDrivers[0] ?? null,
+    () => (selectedDriverId ? filteredDrivers.find((driver) => driver.id === selectedDriverId) ?? null : null),
     [filteredDrivers, selectedDriverId]
   );
 

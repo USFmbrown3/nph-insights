@@ -51,6 +51,23 @@ const navItems = [
   { key: 'export-center', label: 'Export Center', icon: Download }
 ] as const;
 
+const dataAnomalyOptions = [
+  'All Data Anomalies',
+  'Duplicate Events',
+  'Duplicate Timestamps',
+  'Missing Baselines',
+  'Imputed/Adjusted Timestamps',
+  'Paired-Route Records'
+];
+
+const transportationManagerOptions = [
+  'All Managers',
+  'Ava Thompson',
+  'Marcus Lee',
+  'Sonia Patel',
+  'Daniel Reed'
+];
+
 function Clipboard(props: any) {
   return <BarChart3 {...props} />;
 }
@@ -63,6 +80,8 @@ function App() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [driverQuery, setDriverQuery] = useState('');
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
+  const [dataAnomaly, setDataAnomaly] = useState('All Data Anomalies');
+  const [transportationManager, setTransportationManager] = useState('All Managers');
 
   const filteredDrivers = useMemo(
     () => driverRecords.filter((driver) => driver.market === market),
@@ -124,6 +143,10 @@ function App() {
             totalOpportunityHours={totalOpportunityHours}
             totalDistinctSessions={totalDistinctSessions}
             onSelectDriver={setSelectedDriverId}
+            dataAnomaly={dataAnomaly}
+            transportationManager={transportationManager}
+            onDataAnomalyChange={setDataAnomaly}
+            onTransportationManagerChange={setTransportationManager}
           />
         );
     }
@@ -134,7 +157,7 @@ function App() {
       <div className='flex min-h-screen'>
         <aside className='hidden w-72 flex-col border-r border-slate-200 bg-white lg:flex'>
           <div className='flex items-center gap-3 border-b border-slate-200 px-6 py-5'>
-            <div className='flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-usf-orange'>
+            <div className='flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700'>
               <Truck className='h-6 w-6' />
             </div>
             <div>
@@ -154,7 +177,7 @@ function App() {
                 }}
                 className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
                   activePage === key
-                    ? 'bg-orange-50 text-usf-orange ring-1 ring-orange-200'
+                    ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
@@ -183,7 +206,7 @@ function App() {
               >
                 <div className='flex items-center justify-between border-b border-slate-200 pb-4'>
                   <div className='flex items-center gap-3'>
-                    <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-usf-orange'>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700'>
                       <Truck className='h-5 w-5' />
                     </div>
                     <div>
@@ -205,7 +228,7 @@ function App() {
                         setMobileNavOpen(false);
                       }}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left ${
-                        activePage === key ? 'bg-orange-50 text-usf-orange' : 'text-slate-600 hover:bg-slate-100'
+                        activePage === key ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-100'
                       }`}
                     >
                       <Icon className='h-5 w-5' />
@@ -234,7 +257,7 @@ function App() {
                 <div className='hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 md:block'>
                   {fiscalWeek}
                 </div>
-                <div className='hidden rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-medium text-usf-orange md:block'>
+                <div className='hidden rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 md:block'>
                   {nphMeasure}
                 </div>
               </div>
@@ -244,7 +267,7 @@ function App() {
           <main className='p-4 md:p-6'>
             <section className='card-surface mb-5 p-4 md:p-5'>
               <div className='flex items-center gap-2 text-slate-900'>
-                <Filter className='h-4 w-4 text-usf-orange' />
+                <Filter className='h-4 w-4 text-emerald-700' />
                 <h2 className='text-lg font-semibold'>Analysis Scope</h2>
               </div>
 
@@ -255,7 +278,7 @@ function App() {
                     aria-label='Select market'
                     value={market}
                     onChange={(event) => setMarket(event.target.value as Market)}
-                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-orange-400'
+                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-emerald-400'
                   >
                     {markets.map((option) => (
                       <option key={option} value={option}>{option}</option>
@@ -269,7 +292,7 @@ function App() {
                     aria-label='Select fiscal week'
                     value={fiscalWeek}
                     onChange={(event) => setFiscalWeek(event.target.value as FiscalWeek)}
-                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-orange-400'
+                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-emerald-400'
                   >
                     {fiscalWeeks.map((option) => (
                       <option key={option} value={option}>{option}</option>
@@ -283,7 +306,7 @@ function App() {
                     aria-label='Select NPH measure'
                     value={nphMeasure}
                     onChange={(event) => setNphMeasure(event.target.value as NphMeasure)}
-                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-orange-400'
+                    className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none ring-0 transition focus:border-emerald-400'
                   >
                     {nphMeasures.map((option) => (
                       <option key={option} value={option}>{option}</option>
@@ -363,7 +386,7 @@ function App() {
 
                 <div>
                   <div className='text-xs font-medium uppercase tracking-[0.14em] text-slate-500'>Recommended Manager Action</div>
-                  <div className='mt-2 inline-flex rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-semibold text-usf-orange'>
+                  <div className='mt-2 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700'>
                     {buildManagerAction(activeDriver.confidence)}
                   </div>
                   <p className='mt-2 text-sm leading-6 text-slate-700'>{activeDriver.action}</p>
@@ -391,13 +414,21 @@ function OverviewPage({
   totalOpportunityCost,
   totalOpportunityHours,
   totalDistinctSessions,
-  onSelectDriver
+  onSelectDriver,
+  dataAnomaly,
+  transportationManager,
+  onDataAnomalyChange,
+  onTransportationManagerChange
 }: {
   drivers: DriverRecord[];
   totalOpportunityCost: number;
   totalOpportunityHours: number;
   totalDistinctSessions: number;
   onSelectDriver: (id: string) => void;
+  dataAnomaly: string;
+  transportationManager: string;
+  onDataAnomalyChange: (value: string) => void;
+  onTransportationManagerChange: (value: string) => void;
 }) {
   const kpis = [
     {
@@ -405,14 +436,14 @@ function OverviewPage({
       value: formatShortCurrency(totalOpportunityCost),
       note: 'Stop-level opportunity value for the selected market and week.',
       icon: CircleDollarSign,
-      accent: 'bg-orange-50 text-usf-orange'
+      accent: 'bg-emerald-50 text-emerald-700'
     },
     {
       title: 'Opportunity Hours',
       value: formatHours(totalOpportunityHours),
       note: 'Validated stop-level chance to recover lost minutes across the route population.',
       icon: Clock3,
-      accent: 'bg-amber-50 text-amber-700'
+      accent: 'bg-emerald-50 text-emerald-700'
     },
     {
       title: 'Distinct Route Sessions',
@@ -426,12 +457,44 @@ function OverviewPage({
       value: '94.7%',
       note: 'High-confidence evidence remains in scope; review-based items are excluded from supported coaching.',
       icon: CheckCircle2,
-      accent: 'bg-sky-50 text-sky-700'
+      accent: 'bg-emerald-50 text-emerald-700'
     }
   ];
 
   return (
     <div className='space-y-6'>
+      <section className='card-surface p-4 md:p-5'>
+        <div className='grid gap-3 md:grid-cols-2'>
+          <label className='flex flex-col gap-2 text-sm font-medium text-slate-700'>
+            Data Anomaly
+            <select
+              aria-label='Select Data Anomaly'
+              value={dataAnomaly}
+              onChange={(event) => onDataAnomalyChange(event.target.value)}
+              className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none transition focus:border-emerald-400'
+            >
+              {dataAnomalyOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className='flex flex-col gap-2 text-sm font-medium text-slate-700'>
+            Transportation Manager
+            <select
+              aria-label='Select Transportation Manager'
+              value={transportationManager}
+              onChange={(event) => onTransportationManagerChange(event.target.value)}
+              className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none transition focus:border-emerald-400'
+            >
+              {transportationManagerOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </section>
+
       <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
         {kpis.map((kpi) => (
           <div key={kpi.title} className='card-surface p-4'>
@@ -468,15 +531,15 @@ function OverviewPage({
               <AreaChart data={weeklyTrend} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id='opportunityFill' x1='0' x2='0' y1='0' y2='1'>
-                    <stop offset='0%' stopColor={chartPalette.orange} stopOpacity={0.32} />
-                    <stop offset='100%' stopColor={chartPalette.orange} stopOpacity={0.05} />
+                    <stop offset='0%' stopColor={chartPalette.green} stopOpacity={0.32} />
+                    <stop offset='100%' stopColor={chartPalette.green} stopOpacity={0.05} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray='4 4' stroke='#cbd5e1' />
                 <XAxis dataKey='week' tickLine={false} axisLine={false} />
                 <YAxis tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ borderRadius: 12, borderColor: '#e2e8f0' }} />
-                <Area type='monotone' dataKey='opportunity' stroke={chartPalette.orange} fill='url(#opportunityFill)' strokeWidth={3} name='Opportunity Minutes' />
+                <Area type='monotone' dataKey='opportunity' stroke={chartPalette.green} fill='url(#opportunityFill)' strokeWidth={3} name='Opportunity Minutes' />
                 <Area type='monotone' dataKey='baseline' stroke={chartPalette.green} strokeDasharray='6 6' fill='transparent' strokeWidth={2.5} name='Applicable Baseline' />
               </AreaChart>
             </ResponsiveContainer>
@@ -492,7 +555,7 @@ function OverviewPage({
                 <XAxis type='number' tickLine={false} axisLine={false} />
                 <YAxis dataKey='category' type='category' width={92} tickLine={false} axisLine={false} />
                 <Tooltip formatter={(value: number) => [`${value} minutes`, 'Stop Opportunity Minutes']} contentStyle={{ borderRadius: 12, borderColor: '#e2e8f0' }} />
-                <Bar dataKey='minutes' radius={[0, 10, 10, 0]} fill={chartPalette.orange} />
+                <Bar dataKey='minutes' radius={[0, 10, 10, 0]} fill={chartPalette.green} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -518,7 +581,7 @@ function TopDriverOpportunities({ drivers, onSelectDriver }: { drivers: DriverRe
             key={driver.id}
             type='button'
             onClick={() => onSelectDriver(driver.id)}
-            className='rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:border-orange-200 hover:bg-orange-50'
+            className='rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:border-emerald-200 hover:bg-emerald-50'
           >
             <div className='flex items-center justify-between'>
               <span className='rounded-full bg-white px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500'>Rank #{index + 1}</span>
@@ -587,7 +650,7 @@ function DriverAnalysisPage({
                 <tr key={driver.id} className='cursor-pointer border-b border-slate-100 transition hover:bg-slate-50'>
                   <td className='py-3 pr-4 text-sm font-medium text-slate-500'>#{index + 1}</td>
                   <td className='py-3 pr-4'>
-                    <button type='button' className='text-left font-medium text-slate-900 hover:text-usf-orange' onClick={() => onSelectDriver(driver.id)}>
+                    <button type='button' className='text-left font-medium text-slate-900 hover:text-emerald-700' onClick={() => onSelectDriver(driver.id)}>
                       {driver.name}
                     </button>
                   </td>
@@ -643,7 +706,7 @@ function DriverAnalysisPage({
           </div>
           <div className='mt-4'>
             <div className='text-xs uppercase tracking-[0.14em] text-slate-500'>Recommended Manager Action</div>
-            <div className='mt-2 inline-flex rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-semibold text-usf-orange'>
+            <div className='mt-2 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700'>
               {buildManagerAction(selectedDriver.confidence)}
             </div>
             <p className='mt-2 text-sm leading-6 text-slate-700'>{selectedDriver.action}</p>
@@ -686,7 +749,7 @@ function RouteEvidencePage({ records }: { records: RouteEvidenceRecord[] }) {
     <div className='space-y-5'>
       <section className='card-surface p-4 md:p-5'>
         <div className='flex items-center gap-2'>
-          <BriefcaseBusiness className='h-4 w-4 text-usf-orange' />
+          <BriefcaseBusiness className='h-4 w-4 text-emerald-700' />
           <h3 className='section-title'>Route Evidence</h3>
         </div>
         <div className='mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6'>
@@ -708,7 +771,7 @@ function RouteEvidencePage({ records }: { records: RouteEvidenceRecord[] }) {
               key={record.id}
               type='button'
               onClick={() => setSelectedRecordId(record.id)}
-              className={`card-surface p-4 text-left transition ${selectedRecord?.id === record.id ? 'border-orange-200 bg-orange-50/50' : 'bg-white'}`}
+              className={`card-surface p-4 text-left transition ${selectedRecord?.id === record.id ? 'border-emerald-200 bg-emerald-50/50' : 'bg-white'}`}
             >
               <div className='flex items-center justify-between gap-3'>
                 <div>
@@ -780,7 +843,7 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
         aria-label={label}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none transition focus:border-orange-400'
+        className='rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none transition focus:border-emerald-400'
       >
         {options.map((option) => (
           <option key={option} value={option}>{option}</option>
@@ -830,7 +893,7 @@ function CoachingPlannerPage({ drivers }: { drivers: DriverRecord[] }) {
               </span>
             </div>
             <p className='mt-4 text-sm leading-7 text-slate-700'>{driver.summary}</p>
-            <div className='mt-3 inline-flex rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-semibold text-usf-orange'>
+            <div className='mt-3 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700'>
               {buildManagerAction(driver.confidence)}
             </div>
             <p className='mt-3 text-sm leading-7 text-slate-700'>{driver.action}</p>
@@ -856,7 +919,7 @@ function DataQualityPage({ drivers }: { drivers: DriverRecord[] }) {
 
       <section className='card-surface p-5'>
         <div className='flex items-center gap-2 text-slate-900'>
-          <ShieldCheck className='h-5 w-5 text-usf-green' />
+          <ShieldCheck className='h-5 w-5 text-emerald-700' />
           <h3 className='section-title'>Data Compliance</h3>
         </div>
         <div className='mt-4 flex items-end justify-between gap-3'>
@@ -864,7 +927,7 @@ function DataQualityPage({ drivers }: { drivers: DriverRecord[] }) {
           <span className='inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700'>Within review range</span>
         </div>
         <div aria-label='Data compliance progress' className='mt-4 h-3 overflow-hidden rounded-full bg-slate-200'>
-          <div className='h-full rounded-full bg-usf-green' style={{ width: '94.7%' }} />
+          <div className='h-full rounded-full bg-emerald-700' style={{ width: '94.7%' }} />
         </div>
         <p className='mt-3 text-sm leading-7 text-slate-700'>
           The current sample maintains a strong compliance profile, but validation-required records are excluded from confirmed coaching conclusions. Review imputed or adjusted evidence before extending support for a managerial action.
@@ -897,7 +960,7 @@ function ExportCenterPage() {
     <div className='space-y-6'>
       <section className='card-surface p-5'>
         <div className='flex items-center gap-2'>
-          <Download className='h-4 w-4 text-usf-orange' />
+          <Download className='h-4 w-4 text-emerald-700' />
           <h3 className='section-title'>Export Center</h3>
         </div>
         <div className='mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4'>
@@ -929,7 +992,7 @@ function ExportCenterPage() {
                   type='button'
                   onClick={() => toggleSection(section)}
                   className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
-                    includedSections.includes(section) ? 'border-orange-200 bg-orange-50 text-usf-orange' : 'border-slate-200 bg-white text-slate-600'
+                    includedSections.includes(section) ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-600'
                   }`}
                 >
                   {section}
@@ -942,7 +1005,7 @@ function ExportCenterPage() {
 
       <section className='card-surface p-5'>
         <div className='flex items-center gap-2 text-slate-900'>
-          <FileText className='h-5 w-5 text-usf-orange' />
+          <FileText className='h-5 w-5 text-emerald-700' />
           <h3 className='section-title'>Preview</h3>
         </div>
         <p className='mt-4 text-sm leading-7 text-slate-700'>

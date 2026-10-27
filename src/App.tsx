@@ -4,6 +4,7 @@ import {
   BarChart3,
   BriefcaseBusiness,
   Building2,
+  CalendarCheck2,
   CheckCircle2,
   ChevronRight,
   CircleDollarSign,
@@ -13,8 +14,10 @@ import {
   Filter,
   Gauge,
   LayoutDashboard,
+  Mail,
   Menu,
   Search,
+  Send,
   ShieldCheck,
   Truck,
   Users,
@@ -77,6 +80,32 @@ const managerBreakdown = [
 
 function Clipboard(props: any) {
   return <BarChart3 {...props} />;
+}
+
+function ActionButton({
+  icon: Icon,
+  label,
+  active = false,
+  className = ''
+}: {
+  icon: typeof Send;
+  label: string;
+  active?: boolean;
+  className?: string;
+}) {
+  return (
+    <button
+      type='button'
+      className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition ${
+        active
+          ? 'border-emerald-200 bg-emerald-100 text-emerald-800 shadow-sm'
+          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+      } ${className}`}
+    >
+      <Icon className='h-4 w-4' />
+      <span>{label}</span>
+    </button>
+  );
 }
 
 function App() {
@@ -575,6 +604,25 @@ function OverviewPage({
       </div>
 
       <section className='card-surface p-4 md:p-5'>
+        <div className='mb-5 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between'>
+          <div>
+            <div className='text-xs font-medium uppercase tracking-[0.18em] text-slate-500'>Manager, Sunvale</div>
+            <h3 className='mt-2 text-4xl font-semibold tracking-tight text-slate-900'>Reese Ramsey</h3>
+            <div className='mt-2 flex items-center gap-2 text-sm text-slate-600'>
+              <span className='font-semibold text-slate-900'>Health 81</span>
+              <span>•</span>
+              <span>Watch level in 4 weeks</span>
+            </div>
+          </div>
+
+          <div className='flex flex-wrap gap-3'>
+            <ActionButton icon={Send} label='Send PROPS' active={false} />
+            <ActionButton icon={CalendarCheck2} label='Schedule coaching' active={true} />
+            <ActionButton icon={Mail} label='Email action items' />
+            <ActionButton icon={FileText} label='Word plan' />
+          </div>
+        </div>
+
         <div className='mb-4 flex items-center justify-between'>
           <h3 className='section-title'>Manager</h3>
           <span className='rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500'>Level breakdown</span>
@@ -913,7 +961,7 @@ function CoachingPlannerPage({ drivers }: { drivers: DriverRecord[] }) {
       <section className='card-surface p-5'>
         <div className='text-xs font-medium uppercase tracking-[0.16em] text-slate-500'>Coaching Objective</div>
         <p className='mt-2 text-sm leading-7 text-slate-700'>
-          Prioritize recurring Service, Pre-Scan, and AM opportunities using the supplied route-session evidence. Managers should validate unresolved data concerns, discuss operating conditions noted in the route summary, and align coaching on the highest-confidence drivers before the next reporting period.
+          Prioritize recurring Service, Pre-Scan, and AM opportunities using the supplied route-session evidence. Managers should validate unresolved data concerns, discuss operating conditions neutrally, and establish measurable improvement goals for supported patterns.
         </p>
       </section>
 

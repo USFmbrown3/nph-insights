@@ -68,6 +68,13 @@ const transportationManagerOptions = [
   'Daniel Reed'
 ];
 
+const managerBreakdown = [
+  { manager: 'Ava Thompson', opportunity: 1410, share: 32, drivers: 2, focus: 'Service + Pre-Scan' },
+  { manager: 'Marcus Lee', opportunity: 1185, share: 27, drivers: 2, focus: 'AM + Post-Scan' },
+  { manager: 'Sonia Patel', opportunity: 1010, share: 23, drivers: 1, focus: 'Route validation' },
+  { manager: 'Daniel Reed', opportunity: 804, share: 18, drivers: 1, focus: 'Cross-route coaching' }
+];
+
 function Clipboard(props: any) {
   return <BarChart3 {...props} />;
 }
@@ -461,6 +468,11 @@ function OverviewPage({
     }
   ];
 
+  const activeManagerBreakdown = managerBreakdown.map((item) => ({
+    ...item,
+    isSelected: transportationManager !== 'All Managers' && transportationManager === item.manager
+  }));
+
   return (
     <div className='space-y-6'>
       <section className='card-surface p-4 md:p-5'>
@@ -561,6 +573,40 @@ function OverviewPage({
           </div>
         </section>
       </div>
+
+      <section className='card-surface p-4 md:p-5'>
+        <div className='mb-4 flex items-center justify-between'>
+          <h3 className='section-title'>Manager</h3>
+          <span className='rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500'>Level breakdown</span>
+        </div>
+        <div className='grid gap-4 lg:grid-cols-4'>
+          {activeManagerBreakdown.map((item) => (
+            <div
+              key={item.manager}
+              className={`rounded-2xl border p-4 transition ${
+                item.isSelected ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'
+              }`}
+            >
+              <div className='flex items-center justify-between gap-2'>
+                <span className='text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500'>Manager</span>
+                {item.isSelected && (
+                  <span className='rounded-full border border-emerald-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-emerald-700'>Selected</span>
+                )}
+              </div>
+              <div className='mt-3 text-lg font-semibold text-slate-900'>{item.manager}</div>
+              <div className='mt-2 text-2xl font-semibold text-slate-900'>{formatCurrency(item.opportunity)}</div>
+              <div className='mt-1 text-sm text-slate-600'>{item.drivers} drivers</div>
+              <div className='mt-3 flex items-center justify-between text-xs text-slate-500'>
+                <span>{item.focus}</span>
+                <span>{item.share}%</span>
+              </div>
+              <div className='mt-2 h-2 overflow-hidden rounded-full bg-slate-200'>
+                <div className='h-full rounded-full bg-emerald-600' style={{ width: `${item.share}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <TopDriverOpportunities drivers={drivers} onSelectDriver={onSelectDriver} />
     </div>
@@ -867,7 +913,7 @@ function CoachingPlannerPage({ drivers }: { drivers: DriverRecord[] }) {
       <section className='card-surface p-5'>
         <div className='text-xs font-medium uppercase tracking-[0.16em] text-slate-500'>Coaching Objective</div>
         <p className='mt-2 text-sm leading-7 text-slate-700'>
-          Prioritize recurring Service, Pre-Scan, and AM opportunities using the supplied route-session evidence. Managers should validate unresolved data concerns, discuss operating conditions neutrally, and establish measurable improvement goals for supported patterns.
+          Prioritize recurring Service, Pre-Scan, and AM opportunities using the supplied route-session evidence. Managers should validate unresolved data concerns, discuss operating conditions noted in the route summary, and align coaching on the highest-confidence drivers before the next reporting period.
         </p>
       </section>
 
@@ -930,7 +976,7 @@ function DataQualityPage({ drivers }: { drivers: DriverRecord[] }) {
           <div className='h-full rounded-full bg-emerald-700' style={{ width: '94.7%' }} />
         </div>
         <p className='mt-3 text-sm leading-7 text-slate-700'>
-          The current sample maintains a strong compliance profile, but validation-required records are excluded from confirmed coaching conclusions. Review imputed or adjusted evidence before extending support for a managerial action.
+          The current sample maintains a strong compliance profile, but validation-required records are excluded from confirmed coaching conclusions. Review imputed or adjusted evidence before expanding manager coaching actions.
         </p>
       </section>
     </div>
